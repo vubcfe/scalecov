@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "ScaleCov: calibrating and checking prediction intervals of spatial maps across nested scales"
+version: 0.1.0
+date-released: "2026-11-12"
+license: MIT
+repository-code: "https://github.com/vubcfe/scalecov"
+keywords: [conformal prediction, uncertainty quantification, spatial aggregation, change of support, remote sensing, map accuracy]
+authors:
+  - family-names: Bui
+    given-names: Cao Vu
+    email: vubc@fe.edu.vn
+    affiliation: "Department of Artificial Intelligence, FPT University, Da Nang, Vietnam"
+  - family-names: Nguyen
+    given-names: Hoang-Anh-Vu
+    affiliation: "Department of Computer Fundamentals, FPT University, Da Nang, Vietnam"
+  - family-names: Nguyen
+    given-names: Van-Nam
+    affiliation: "Department of Software Engineering, FPT University, Da Nang, Vietnam"

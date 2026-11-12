@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+dist/
+build/
+*.egg-info/
+.ipynb_checkpoints/
+site
+examples/barc/data/
+examples/barc/results/

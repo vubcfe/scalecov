@@ -1,0 +1,29 @@
+site_name: ScaleCov
+site_description: Calibrate and check prediction intervals of spatial maps across nested scales
+repo_url: https://github.com/vubcfe/scalecov
+theme:
+  name: material
+nav:
+  - Home: index.md
+  - Installation: installation.md
+  - Tutorial: tutorial.md
+  - Methods: methods.md
+  - Recommended settings: settings.md
+  - API: api.md
+  - FAQ: faq.md
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: [src]
+          options:
+            docstring_style: numpy
+            show_source: false
+markdown_extensions:
+  - pymdownx.arithmatex:
+      generic: true
+  - tables
+extra_javascript:
+  - javascripts/mathjax.js
+  - https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js
