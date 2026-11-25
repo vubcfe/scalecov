@@ -33,3 +33,28 @@ def test_units_split_across_folds_are_rejected():
     check_folds(d, "fold", ["unit"])           # units themselves are whole: fine
     with pytest.raises(ValueError, match="group"):
         cross_calibrate(d, "fold", ["unit", "group"], methods=["direct"])
+
+
+def test_coverage_interval_and_nominal_range():
+    from scipy.stats import binomtest
+
+    from scalecov import coverage_interval, nominal_range
+
+    lo, hi = coverage_interval(45, 50)
+    ci = binomtest(45, 50).proportion_ci(0.95, method="exact")
+    assert np.isclose(lo, ci.low) and np.isclose(hi, ci.high)
+    assert coverage_interval(0, 10)[0] == 0.0 and coverage_interval(10, 10)[1] == 1.0
+    lo, hi = nominal_range(18, 0.1)
+    assert lo < 0.8 and hi == 1.0              # few units: wide range
+    lo, hi = nominal_range(10000, 0.1)
+    assert 0.89 < lo < 0.9 < hi < 0.91       # many units: narrow range
+
+
+def test_summarise_reports_interval_and_consistency():
+    d = nested_field(n_groups=60, units_per_group=2, unit_shape=(8, 8), random_state=5)
+    d["fold"] = d.group % 3
+    s = summarise(cross_calibrate(d, "fold", ["unit", "group"], methods=["independent", "direct"]))
+    u = s[s.level != "pixel"]
+    assert (u.coverage_lo <= u.coverage).all() and (u.coverage <= u.coverage_hi).all()
+    ind = u[(u.level == "unit") & (u.method == "independent")].iloc[0]
+    assert not ind.consistent                 # independence under-covers far beyond sampling noise

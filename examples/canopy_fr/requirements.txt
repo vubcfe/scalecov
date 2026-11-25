@@ -1,0 +1,8 @@
+# environment for the canopy height example (in addition to scalecov itself)
+geopandas>=0.14
+pyogrio
+rasterio>=1.3
+pyproj
+pandas>=2.2
+pyarrow
+scipy

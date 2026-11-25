@@ -58,6 +58,11 @@ Folds should keep dependent units together: for example, all fields of a farm, o
 
 In the simulated example, nominal 90 % intervals for unit means cover 13 % of units when pixel errors are treated as independent, 27 % with a within-unit variogram, and 90 % with direct calibration. For group means, adding a unit random effect is not enough (81 %), because units of a group share errors too. See [examples/quickstart.py](examples/quickstart.py).
 
+## Examples with public data
+
+- [examples/barc](examples/barc): harvester yield maps of the USDA Beltsville Agricultural Research Center, predicted from Sentinel-2 cubes built with [S2Cube](https://github.com/vubcfe/s2cube). Levels: 10 m pixels, field-seasons, section-years and farm-years.
+- [examples/canopy_fr](examples/canopy_fr): a published global canopy height map, checked against airborne LiDAR in the public forests of Hauts-de-France. Levels: 10 m pixels, forest compartments and forests. The map's own per-pixel uncertainty is checked as well.
+
 ## Notes on the constructions
 
 - **`direct`** is the only construction that adapts to error shared at every level, because it is calibrated at that level. It needs only the unit aggregates (mean residuals of calibration units).

@@ -2,6 +2,14 @@
 
 All notable changes are documented here. The project follows [Semantic Versioning](https://semver.org).
 
+## [0.2.0] - 2026-11-25
+
+- `coverage_interval`, `nominal_range`: Clopper-Pearson interval of an observed coverage and the range of observed coverage consistent with the nominal level for a given number of units.
+- `summarise` reports `coverage_lo`, `coverage_hi` and `consistent` for every unit level.
+- New example `examples/canopy_fr`: a published global canopy height map checked against public airborne LiDAR in the public forests of Hauts-de-France (compartments within forests), including the map's own per-pixel uncertainty.
+- Documentation: minimum number of calibration units for `direct`; reading coverage with few units.
+- CI: Ubuntu runner pinned to 24.04 (Python 3.9 is not available on newer images).
+
 ## [0.1.0] - 2026-11-12
 
 First public release.

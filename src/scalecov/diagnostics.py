@@ -13,6 +13,7 @@ from collections.abc import Sequence
 
 import numpy as np
 import pandas as pd
+from scipy.stats import beta, binom
 
 from .conformal import PixelConformal
 from .units import METHODS, UnitIntervals
@@ -88,17 +89,59 @@ def cross_calibrate(data: pd.DataFrame, fold: str, levels: Sequence[str], alphas
             "fits": pd.DataFrame(fits)}
 
 
-def summarise(result: dict) -> pd.DataFrame:
+def coverage_interval(n_covered, n, conf: float = 0.95):
+    """Clopper-Pearson interval for a coverage estimated from ``n_covered`` of ``n`` test units.
+
+    Units are treated as independent trials. Units of one fold share their calibration, so the
+    interval is approximate and, if anything, too narrow; it shows how much of a gap to the nominal
+    level can be sampling noise.
+
+    Returns
+    -------
+    tuple of float
+        Lower and upper bound (``nan`` when ``n`` is 0).
+    """
+    k, n = np.asarray(n_covered, float), np.asarray(n, float)
+    a = (1 - conf) / 2
+    with np.errstate(invalid="ignore", divide="ignore"):
+        lo = np.where(k > 0, beta.ppf(a, k, n - k + 1), 0.0)
+        hi = np.where(k < n, beta.ppf(1 - a, k + 1, n - k), 1.0)
+    lo, hi = np.where(n > 0, lo, np.nan), np.where(n > 0, hi, np.nan)
+    return (float(lo), float(hi)) if lo.ndim == 0 else (lo, hi)
+
+
+def nominal_range(n, alpha: float, conf: float = 0.95):
+    """Range of observed coverage that is consistent with the nominal level ``1 - alpha`` for ``n``
+    independent test units: the central ``conf`` interval of Binomial(n, 1 - alpha) / n."""
+    n = np.asarray(n, float)
+    lo = binom.ppf((1 - conf) / 2, n, 1 - alpha) / n
+    hi = binom.ppf(1 - (1 - conf) / 2, n, 1 - alpha) / n
+    return (float(lo), float(hi)) if lo.ndim == 0 else (lo, hi)
+
+
+def summarise(result: dict, conf: float = 0.95) -> pd.DataFrame:
     """Coverage and mean width pooled over folds, by alpha, level and method; pixel rows included
-    (pooled pixel coverage weighted by the number of test pixels of each fold)."""
+    (pooled pixel coverage weighted by the number of test pixels of each fold).
+
+    For unit levels, ``coverage_lo`` and ``coverage_hi`` give a Clopper-Pearson interval of the
+    coverage (see :func:`coverage_interval`) and ``consistent`` tells whether the observed coverage lies
+    in the range expected under the nominal level (see :func:`nominal_range`). With few units these
+    ranges are wide: 18 units at 90 % are consistent with an observed coverage from 72 % to 100 %.
+    """
     u = result["units"]
     t = u.groupby(["alpha", "level", "method"], sort=False).agg(
         coverage=("covered", "mean"), mean_width=("half_width", lambda s: 2 * s.mean()),
-        n_units=("unit", "size")).reset_index()
+        n_units=("unit", "size"), n_covered=("covered", "sum")).reset_index()
+    t["coverage_lo"], t["coverage_hi"] = coverage_interval(t.n_covered.to_numpy(), t.n_units.to_numpy(), conf)
+    lo, hi = nominal_range(t.n_units.to_numpy(), t.alpha.to_numpy(), conf)
+    t["consistent"] = (t.coverage >= lo - 1e-12) & (t.coverage <= hi + 1e-12)
+    t = t.drop(columns="n_covered")
     p = result["pixels"]
     pr = p.groupby("alpha").apply(lambda g: pd.Series({
         "coverage": float(np.average(g.coverage, weights=g.n_pixels)),
         "mean_width": float(np.average(2 * g.q_px, weights=g.n_pixels)),
         "n_units": np.nan}), include_groups=False).reset_index()
     pr["level"], pr["method"] = "pixel", "conformal"
-    return pd.concat([pr[t.columns], t], ignore_index=True)
+    for c in ("coverage_lo", "coverage_hi", "consistent"):
+        pr[c] = np.nan
+    return pd.concat([pr[t.columns], t.astype({"consistent": object})], ignore_index=True)

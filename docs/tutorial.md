@@ -27,6 +27,8 @@ print(sc.summarise(res))
 
 For each fold, everything is calibrated on the other folds and evaluated on the fold itself. The summary gives, for the pixel level and for every unit level and construction, the coverage of nominal 90 % intervals and their mean width. In this example, independent pixel errors give about 13 % coverage for unit means and a within-unit variogram about 27 %, while direct calibration reaches about 90 %.
 
+Each unit row also has `coverage_lo` and `coverage_hi`, a Clopper-Pearson interval of the coverage, and `consistent`, which tells whether the observed coverage lies in the range expected under the nominal level for that number of units (`sc.nominal_range`). With few units this range is wide: for 18 units and 90 % intervals, any coverage from 72 % to 100 % is consistent with correct calibration, so a gap of a few points is not evidence of a problem.
+
 ## 3. Only aggregates in the target region
 
 ```python
