@@ -4,6 +4,7 @@ title: "ScaleCov: calibrating and checking prediction intervals of spatial maps 
 version: 0.1.0
 date-released: "2026-11-12"
 license: MIT
+doi: 10.5281/zenodo.24520162
 repository-code: "https://github.com/vubcfe/scalecov"
 keywords: [conformal prediction, uncertainty quantification, spatial aggregation, change of support, remote sensing, map accuracy]
 authors:

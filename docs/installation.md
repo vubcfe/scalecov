@@ -1,7 +1,7 @@
 # Installation
 
 ```bash
-pip install scalecov             # after the first release
+pip install scalecov
 pip install "scalecov[plot]"     # with matplotlib for plots
 ```
 

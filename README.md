@@ -1,5 +1,11 @@
 # ScaleCov
 
+[![tests](https://github.com/vubcfe/scalecov/actions/workflows/tests.yml/badge.svg)](https://github.com/vubcfe/scalecov/actions/workflows/tests.yml)
+[![PyPI](https://img.shields.io/pypi/v/scalecov.svg)](https://pypi.org/project/scalecov/)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24520162.svg)](https://doi.org/10.5281/zenodo.24520162)
+[![Documentation](https://readthedocs.org/projects/scalecov/badge/?version=latest)](https://scalecov.readthedocs.io)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE.txt)
+
 **ScaleCov** (coverage across scales) calibrates and checks prediction intervals of spatial maps across nested scales: pixels, units (for example fields or plots) and groups of units (for example farms or districts).
 
 A map with valid pixel intervals does not automatically give valid intervals for the means of fields or farms, because pixel errors inside a unit share a common component. `scalecov` makes this checkable. It takes predictions, observations and the identifiers of nested units, and works with any model.
@@ -26,7 +32,7 @@ A map with valid pixel intervals does not automatically give valid intervals for
 ## Installation
 
 ```bash
-pip install scalecov            # after the first release
+pip install scalecov
 pip install -e ".[dev]"         # from a clone, with test tools
 ```
 
@@ -61,7 +67,7 @@ In the simulated example, nominal 90 % intervals for unit means cover 13 % of un
 
 ## Citation
 
-If you use ScaleCov, please cite the software (see `CITATION.cff`; DOI to be added on release).
+If you use ScaleCov, please cite the software: Bui, C. V., Nguyen, H.-A.-V., Nguyen, V.-N. ScaleCov (Zenodo), doi:[10.5281/zenodo.24520162](https://doi.org/10.5281/zenodo.24520162) (all versions; v0.1.0: [10.5281/zenodo.24520163](https://doi.org/10.5281/zenodo.24520163)). See also `CITATION.cff`.
 
 ## License
 
